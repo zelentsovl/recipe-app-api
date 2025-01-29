@@ -5,7 +5,7 @@ from django.contrib.auth import (
     get_user_model,
     authenticate
 )
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext as _
 from rest_framework import serializers
 
 
@@ -28,7 +28,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         """Update and return an existing user."""
-        password = validated_data.pop('password')
+        password = validated_data.pop('password', None)
         user = super().update(instance, validated_data)
 
         if password:
@@ -38,7 +38,7 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 class AuthTokenSerializer(serializers.Serializer):
-    """Serializer for the user authentication object."""
+    """Serializer for the user auth token."""
     email = serializers.EmailField()
     password = serializers.CharField(
         style={'input_type': 'password'},
